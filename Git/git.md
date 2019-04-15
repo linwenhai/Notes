@@ -98,5 +98,16 @@ $ git reflog
 
 
 
+###### 4.9 上传项目到Github
 
+```shell
+$ git remote add origin https://github.com/linwenhai/Notes.git
+$ git push -u origin master
+```
+
+如本地库和远程库不一致，需把远程库中的更新合并到本地库中，再上传
+
+```shell
+$ git pull --rebase origin master
+```
 
