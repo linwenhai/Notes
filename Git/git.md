@@ -98,16 +98,51 @@ $ git reflog
 
 
 
-###### 4.9 上传项目到Github
+###### 4.9 删除文件
+
+```shell
+$ rm test.txt
+$ git status
+$ git rm test.txt
+$ git commit -m "remove test.txt"
+```
+
+
+
+###### 4.10 把本地仓库与远程仓库关联
 
 ```shell
 $ git remote add origin https://github.com/linwenhai/Notes.git
+$ git remote -v
+```
+
+`-v`查看当前配置有哪些远程仓库
+
+
+
+###### 4.11 上传项目到Github
+
+```shell
 $ git push -u origin master
 ```
+
+第一次推送`master`分支时，加上了`-u`参数
+
+```shell
+$ git push origin master
+```
+
+
 
 如本地库和远程库不一致，需把远程库中的更新合并到本地库中，再上传
 
 ```shell
 $ git pull --rebase origin master
 ```
+
+
+
+4.14 从远程库克隆到本地
+
+
 
