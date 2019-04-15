@@ -142,7 +142,14 @@ $ git pull --rebase origin master
 
 
 
-4.14 从远程库克隆到本地
+###### 4.12 从远程库克隆到本地
+
+```shell
+$ cd d:
+$ git clone https://github.com/linwenhai/Notes.git
+```
+
+
 
 
 
