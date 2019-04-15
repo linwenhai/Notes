@@ -236,6 +236,101 @@ tuple和list非常类似，但是tuple一旦初始化就不能修改。
 
 
 
+##### 9 条件判断
+
+```python
+s = input('birth:')
+birth = int(s)
+if birth < 2000:
+    print('00前')
+else:
+	print('00后')
+```
+
+`input()`返回的数据类型是`str`
+
+
+
+##### 10 循环
+
+1】for...in循环
+
+```python
+names = ['lin','wen','hai']
+for name in names:
+    print(name)
+```
+
+执行这段代码，会依次打印`names`的每一个元素。
+
+
+
+计算1-10的整数之和
+
+```python
+sum = 0
+for x in [1,2,3,4,5,6,7,8,9,10]:
+    sum =sum + x
+print(sum)
+```
+
+```python
+sum = 0
+for x in range(11):
+    sum = sum + x
+print(sum)
+```
+
+`range(11)`生成的序列是从0开始小于11的整数。
+
+
+
+2】while循环
+
+计算100以内偶数之和。
+
+```python
+sum = 0
+n = 100
+while n > 0:
+    sum = sum + n
+    n = n - 2
+print(sum)
+```
+
+
+
+3】break语句
+
+`break`的作用是提前结束循环。
+
+```python
+n = 1
+while n <= 100:
+    if n > 10:
+        break
+    print(n)
+    n = n +1
+print('END')
+```
+
+
+
+4】continue语句
+
+`continue`语句，跳过当前的这次循环，直接开始下一次循环。
+
+只打印奇数。
+
+```python
+n = 0
+while n < 10:
+    n = n + 1
+    if n % 2 == 0:
+        continue
+    print(n)
+```
+
 
 
 
