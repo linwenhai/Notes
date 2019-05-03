@@ -96,6 +96,27 @@ cat /proc/cpuinfo |grep MHz|uniq 			    #查看CPU的主频
 
 
 
+#### 7 中文乱码解决方法
+
+```shell
+locale -a |grep "zh_CN"			#查看系统是否安装中文语言包 
+yum groupinstall "fonts" -y		#没有输出，说明没有安装，输入命令安装
+locale -a |grep "zh_CN"			#安装完成，查看安了哪些中文语言包
+```
+
+```shell
+echo $LANG				#看看当前系统语言环境
+vi /etc/locale.conf		#设置中文环境
+----------------------
+LANG="zh_CN"
+```
+
+```shell
+source   /etc/locale.conf		#装载配置
+echo $LANG			#验证
+date				#验证
+```
+
 
 
 
