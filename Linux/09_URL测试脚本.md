@@ -43,7 +43,7 @@ main $*
 sh url_test.sh www.baidu.com
 ```
 
-![1556810309437](C:\Users\linwenhai\AppData\Roaming\Typora\typora-user-images\1556810309437.png)
+![1556865186133](assets/1556865186133.png)
 
 
 
