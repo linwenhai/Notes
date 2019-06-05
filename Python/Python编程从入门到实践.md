@@ -82,6 +82,73 @@ alien_0 = {'color': 'green', 'points': 5}
 
 
 
+#### 6.1 访问字典中的值
+
+```python
+alien_0 = {'color':'green'}
+print(alien_0['color'])	
+```
+
+
+
+#### 6.2 添加键—值对
+
+```python
+alien_0 = {'color':'green','points':5}
+alien_0['x_position'] = 12
+alien_0['y_position'] = 28
+print(alien_0)
+```
+
+
+
+使用字典来存储用户提供的数据或在编写能自动生成大量键—值对的代码时，通常都需要先定义一个空字典。
+
+```python
+alien_0 = {}
+alien_0['color'] = 'green'
+alien_0['points'] = 5
+print(alien_0)
+```
+
+
+
+#### 6.3 要修改字典中的值
+
+可依次指定字典名、用方括号括起的键以及与该键相关联的新值。
+
+```python
+alien_0 = {'color':'grenn'}
+alien_0['color'] = 'yelllow'
+print(alien_0)
+```
+
+
+
+#### 6.4 删除键—值对
+
+使用del语句时，必须指定字典名和要删除的键。
+
+```python
+alien_0 = {'color':'green','points':5}
+del alien_0['points']
+print(alien_0)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
