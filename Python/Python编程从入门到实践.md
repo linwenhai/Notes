@@ -15,13 +15,11 @@ for car in cars:
         print(car.title())
 ```
 
-```
-打印结果：
-Audi
-BMW
-Subaru
-Toyota
-```
+>打印结果：
+>Audi
+>BMW
+>Subaru
+>Toyota
 
 
 
@@ -48,6 +46,9 @@ else:
 print("Your admission cost is $" + str(price)+".")
 ```
 
+> 打印结果
+> Your admission cost is $5.
+
 
 
 #### 5.3 使用if 语句处理列表
@@ -61,12 +62,10 @@ for name in names:
         print("Hello " + name)
 ```
 
-```
-打印结果：
-Hello lin
-Sorry,wen is not here
-Hello hai
-```
+>打印结果：
+>Hello lin
+>Sorry,wen is not here
+>Hello hai
 
 
 
@@ -89,6 +88,9 @@ alien_0 = {'color':'green'}
 print(alien_0['color'])	
 ```
 
+>打印结果：
+>green
+
 
 
 #### 6.2 添加键—值对
@@ -100,6 +102,9 @@ alien_0['y_position'] = 28
 print(alien_0)
 ```
 
+>打印结果：
+>{'color': 'green', 'points': 5, 'x_position': 12, 'y_position': 28}
+
 
 
 使用字典来存储用户提供的数据或在编写能自动生成大量键—值对的代码时，通常都需要先定义一个空字典。
@@ -110,6 +115,9 @@ alien_0['color'] = 'green'
 alien_0['points'] = 5
 print(alien_0)
 ```
+
+>打印结果：
+>{'color': 'green', 'points': 5}
 
 
 
@@ -123,9 +131,12 @@ alien_0['color'] = 'yelllow'
 print(alien_0)
 ```
 
+>打印结果：
+>{'color': 'yelllow'}
 
 
-#### 6.4 删除键—值对
+
+#### 6.4 删除键值对
 
 使用del语句时，必须指定字典名和要删除的键。
 
@@ -135,6 +146,8 @@ del alien_0['points']
 print(alien_0)
 ```
 
+>打印结果：
+>{'color': 'green'}
 
 
 
@@ -142,16 +155,89 @@ print(alien_0)
 
 
 
+使用多行来定义字典时，在输入左花括号后按回车键，再在下一行缩进四个空格，指定第一个键—值对，并在它后面加上一个逗号。
+
+```python
+favorite_languages = {
+    'jen': 'python',
+    'sarah': 'c',
+    'edward': 'ruby',
+    'phil': 'python',
+    }
+print(favorite_languages)
+```
+
+>打印结果：
+>{'jen': 'python', 'sarah': 'c', 'edward': 'ruby', 'phil': 'python'}
 
 
 
 
 
+#### 6.5 遍历所有的键值对
+
+方法items()：返回一个键—值对列表。
+
+```python
+names = {
+    'username':'linwnehai',
+    'first':'lin',
+    'last':'wenhai'
+    }
+for key,value in names.items():
+    print("\nKey: " + key)
+    print("Value: " + value)
+```
+
+>打印结果：
+>
+>Key: username
+>Value: linwnehai
+>
+>Key: first
+>Value: lin
+>
+>Key: last
+>Value: wenhai
+
+
+
+```python
+languages = {
+    'xiaoming':'python',
+    'lisi':'c',
+    'zhangshan':'ruby',
+    }
+for name,language in languages.items():
+    print(name.title() + "'s favorite language is " +
+          language.title() + ".")
+```
+
+>打印结果：
+>Xiaoming's favorite language is Python.
+>Lisi's favorite language is C.
+>Zhangshan's favorite language is Ruby.
 
 
 
 
 
+#### 6.6 遍历字典中的所有键
 
+方法keys()，返回键列表
 
+```python
+languages = {
+    'xiaoming':'python',
+    'lisi':'c',
+    'zhangshan':'ruby',
+    }
+for name in languages.keys():
+    print(name.title())
+```
+
+>打印结果：
+>Xiaoming
+>Lisi
+>Zhangshan
 
