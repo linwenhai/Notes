@@ -46,6 +46,19 @@ Logstash管道有两个必需的元素，输入和输出，以及一个可选元
 
 ![1562857869257](assets/1562857869257.png)
 
+
+
+Logstash需要Java 8
+
+```shell
+tar -zxvf jdk-8u201-linux-x64.tar.gz
+tar -zxvf logstash-6.6.0.tar.gz
+ln -s jdk1.8.0_201 jdk
+ln -s logstash-6.6.0 logstash
+```
+
+
+
 #### 2.1 测试Logstash
 
 ```shell
@@ -54,7 +67,17 @@ bin/logstash -e 'input { stdin {} } output { stdout {} }'
 
 在命令行下输入"hello world"
 
-![1562858011746](assets/1562858011746.png)
+```
+hello world
+{
+       "message" => "hello world",
+    "@timestamp" => 2019-07-15T06:51:45.028Z,
+          "host" => "CNSZ17VLK6148",
+      "@version" => "1"
+}
+```
+
+
 
 
 
