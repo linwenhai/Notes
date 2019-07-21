@@ -1,52 +1,21 @@
 ## Logstash
 
-### 1 Logstash简介
+### 1 安装Logstash
 
-Logstash是一个开源数据收集引擎，具有实时管道功能。Logstash可以动态地将来自不同数据源的数据统一起来，并将数据标准化到你所选择的目的地。
-
-Logstash是一个开源的服务器端数据处理管道，可以同时从多个数据源获取数据，并对其进行转换，然后将其发送到你最喜欢的“存储”。（如Elasticsearch）
-
-`输入`：采集各种样式、大小和来源的数据
-
-![1562857093160](assets/1562857093160.png)
+Logstash需要Java 8.不支持Java 9
 
 
 
-`过滤器`：实时解析和转换数据
-
-数据从源传输到存储库的过程中，Logstash 过滤器能够解析各个事件，识别已命名的字段以构建结构，并将它们转换成通用格式，以便更轻松、更快速地分析和实现商业价值。
-
-Logstash 能够动态地转换和解析数据，不受格式或复杂度的影响：
-
-- 利用 Grok 从非结构化数据中派生出结构
-- 从 IP 地址破译出地理坐标
-- 将 PII 数据匿名化，完全排除敏感字段
-- 整体处理不受数据源、格式或架构的影响
+```shell
+tar -zxvf jdk-8u201-linux-x64.tar.gz
+tar -zxvf logstash-6.6.0.tar.gz
+ln -s jdk1.8.0_201 jdk
+ln -s logstash-6.6.0 logstash
+```
 
 
 
-![1562857192431](assets/1562857192431.png)
-
-
-
-
-
-`输出`：选择你的存储，导出你的数据
-
-尽管 Elasticsearch 是我们的首选输出方向，能够为我们的搜索和分析带来无限可能，但它并非唯一选择。
-Logstash 提供众多输出选择，您可以将数据发送到您要指定的地方，并且能够灵活地解锁众多下游用例。
-
-![1562857465617](assets/1562857465617.png)
-
-
-
-### 2 安装Logstash
-
-Logstash管道有两个必需的元素，输入和输出，以及一个可选元素过滤器。输入插件从数据源那里消费数据，过滤器插件根据你的期望修改数据，输出插件将数据写入目的地。
-
-![1562857869257](assets/1562857869257.png)
-
-#### 2.1 测试Logstash
+### 2 测试Logstash
 
 ```shell
 bin/logstash -e 'input { stdin {} } output { stdout {} }'
@@ -54,43 +23,63 @@ bin/logstash -e 'input { stdin {} } output { stdout {} }'
 
 在命令行下输入"hello world"
 
-![1562858011746](assets/1562858011746.png)
-
-
-
-### 3 用Logstash解析日志
-
-#### 3.1 配置Filebeat来发送日志行到Logstash
-
-Filebeat客户端是一个轻量级的、资源友好的工具，它从服务器上的文件中收集日志，并将这些日志转发到你的Logstash实例以进行处理。Filebeat设计就是为了可靠性和低延迟。Filebeat在主机上占用的资源很少，而且Beats input插件将对Logstash实例的资源需求降到最低。
-
-
-
-#### 3.2 配置filebeat.yml
-
-```yml
-filebeat.inputs:
-- type: log
-  paths:
-    - /usr/local/programs/logstash/logstash-tutorial.log
-
-output.logstash:
-  hosts: ["localhost:5044"]
+```
+hello world
+{
+       "message" => "hello world",
+    "@timestamp" => 2019-07-15T06:51:45.028Z,
+          "host" => "CNSZ17VLK6148",
+      "@version" => "1"
+}
 ```
 
 
 
-#### 3.3 新建first-test.conf
+#### 2.1 测试filebeat-->logstash
+
+##### 1】filebeat配置
+
+filebeat.yml
+
+```yaml
+filebeat.prospectors:
+- type: log
+  paths:
+    - /path/to/file/logstash-tutorial.log 
+output.logstash:
+  hosts: ["localhost:5044"]
+```
+
+>/path/to/file/logstash-tutorial.log 		----测试日志
+
+
+
+```shell
+sudo ./filebeat -e -c filebeat.yml -d "publish"
+```
+
+>-d publish`显示所有与`publish`相关的信息
+
+
+
+##### 2】logstash配置
 
 ```conf
 input {
-	beats {
-		port => "5044"
-	}
+    beats {
+        port => "5044"
+    }
 }
-
+ filter {
+    grok {
+        match => { "message" => "%{COMBINEDAPACHELOG}"}
+    }
+    geoip {
+        source => "clientip"
+    }
+}
 output {
-	stdout { codec => rubydebug }
+    stdout { codec => rubydebug }
 }
 ```
 
@@ -98,163 +87,183 @@ output {
 
 
 
-#### 3.4 启动Logstash
+```shell
+bin/logstash -f first-pipeline.conf --config.test_and_exit
+```
 
 ```shell
-# 检查解析配置文件
-bin/logstash -f first-test.conf --config.test_and_exit
+bin/logstash -f first-pipeline.conf --config.reload.automatic
+```
 
-# config.reload.automatic选项的意思是启用自动配置加载，以至于每次你修改完配置文件以后无需停止然后重启Logstash
-bin/logstash -f first-test.conf --config.reload.automatic
+>`--config.test_and_exit`选项会解析您的配置文件并报告任何错误。
+>
+>`--config.reload.automatic`选项启用自动配置重新加载
+
+
+
+
+
+### 3 input
+
+- **file**：从文件系统上的文件读取，与UNIX命令非常相似 `tail -0F`
+- **syslog**：在已知端口514上侦听syslog消息并根据RFC3164格式进行解析
+- **redis**：使用redis通道和redis列表从redis服务器读取。Redis通常用作集中式Logstash安装中的“代理”，该安装将Logstash事件从远程Logstash“托运人”排队。
+- **beats**：处理[ Beats](https://www.elastic.co/downloads/beats)发送的事件。
+
+
+
+##### 1】当前界面输入
+
+```ruby
+input { stdin { } }
 ```
 
 
 
-#### 3.5 启动filebeat
+##### 2】 filebeat输入
 
-```shell
-./filebeat -e -c filebeat.yml -d "publish"
-```
-
-如果一切正常，你将会在Logstash控制台下看到类似这样的输出：
-
-![1562858668193](assets/1562858668193.png)
-
-
-
-
-
-### 4 用Grok过滤器插件解析日志
-
-grok 过滤器插件允许你将非结构化日志数据解析为结构化和可查询的数据。
-
-%{COMBINEDAPACHELOG} grok模式
-
-![1562858909791](assets/1562858909791.png)
-
-
-
-4.1 修改first-test.conf
-
-```conf
+```json
 input {
-	beats {
-		port => "5044"
-	}
+    beats {
+        port => "5044"
+    }
 }
+```
 
+
+
+
+
+### 4 filter
+
+- **grok**：解析并构造任意文本。Grok是目前Logstash中将非结构化日志数据解析为结构化和可查询内容的最佳方式。有了内置于Logstash的120种模式，您很可能会找到满足您需求的模式！
+- **mutate**：对事件字段执行常规转换。您可以重命名，删除，替换和修改事件中的字段。
+- **drop**：完全删除事件，例如*调试*事件。
+- **clone**：制作事件的副本，可能添加或删除字段。
+- **geoip**：添加有关IP地址的地理位置的信息（也在Kibana中显示惊人的图表！）
+
+
+
+##### 1】grok
+
+grok模式的语法：%{SYNTAX:SEMANTIC}
+
+```ruby
 filter {
-	grok {
-		match => { "message" => "%{COMBINEDAPACHELOG}" }
-	}
-}
-
-output {
-	stdout { codec => rubydebug }
+  grok {
+    match => { "message" => "%{COMBINEDAPACHELOG}" }
+  }
 }
 ```
 
 
 
-修改first-test.conf后，需强制Filebeat从头读取日志文件，停掉Filebeat，然后删除Filebeat注册文件。
+##### 2】date
 
-```shell
-cd /app/filebeat
-rm -rf data/registry
+日期过滤器用于解析字段中的日期，然后使用该日期或时间戳作为事件的logstash时间戳。
 
-# 重启Filebeat
-./filebeat -e -c filebeat.yml -d "publish"
-```
-
-
-
-再看Logstash控制台，输出可能是这样的:
-
-![1562859268497](assets/1562859268497.png)
-
-
-
-
-
-### 5 用 Geoip 过滤器插件增强你的数据
-
-5.1 修改first-test.conf
-
-```conf
-input {
-	beats {
-		port => "5044"
-	}
-}
-
+```ruby
 filter {
-	grok {
-		match => { "message" => "%{COMBINEDAPACHELOG}" }
-	}
-	geoip {
-		source => "clientip"
-	}
-}
-
-output {
-	stdout { codec => rubydebug }
+  date {
+    match => [ "logdate", "MMM dd yyyy HH:mm:ss" ]
+  }
 }
 ```
 
 
 
-### 6 索引你的数据到Elasticsearch
 
-6.1 修改first-test.conf
 
-```conf
-input {
-	beats {
-		port => "5044"
-	}
-}
 
+
+
+
+```ruby
 filter {
-	grok {
-		match => { "message" => "%{COMBINEDAPACHELOG}" }
-	}
-	geoip {
-		source => "clientip"
-	}
+  if [path] =~ "access" {
+    mutate { replace => { type => "apache_access" } }
+    grok {
+      match => { "message" => "%{COMBINEDAPACHELOG}" }
+    }
+    date {
+      match => [ "timestamp" , "dd/MMM/yyyy:HH:mm:ss Z" ]
+    }
+  } else if [path] =~ "error" {
+    mutate { replace => { type => "apache_error" } }
+  } else {
+    mutate { replace => { type => "random_logs" } }
+  }
 }
+```
 
+
+
+
+
+
+
+
+
+
+
+
+
+### 5 output
+
+- **elasticsearch**：将事件数据发送到Elasticsearch。如果您计划以高效，方便且易于查询的格式保存数据...... Elasticsearch是您的最佳选择。期。是的，我们有偏见:)
+- **file**：将事件数据写入磁盘上的文件。
+- **graphite**：将事件数据发送到graphite，这是一种用于存储和绘制指标的流行开源工具。
+- **statsd**：将事件数据发送到statsd，这是一种“侦听统计信息，如计数器和定时器，通过UDP发送并将聚合发送到一个或多个可插入后端服务”的服务。如果您已经在使用statsd，这可能对您有用！
+
+
+
+```json
 output {
-	elasticsearch {
-		hosts => { "localhost:9200" }
-	}
+    elasticsearch {
+        hosts => ["IP Address 1:port1", "IP Address 2:port2", "IP Address 3"]
+    }
 }
 ```
 
 
 
-6.2 查看Elasticsearch的索引
-
-```shell
-# 重启filebeat后
-curl 'localhost:9200/_cat/indices?v'
-```
-
-可以看到有一个名字叫"logstash-2018.08.11"的索引
 
 
+### 6 logstash.yml配置文件
 
-```shell
-# 查看这个索引下的文档
-curl -X GET 'localhost:9200/logstash-2018.08.11/_search?pretty&q=response=200'
-```
+pipeline.workers			----主机的CPU核心数
+
+pipeline.batch.size		----在尝试执行其过滤器和输出之前，单个工作线程将从输入收集的最大事件数,代价是增加了内存开销
+
+pipeline.batch.delay	----创建管道事件批处理时，在将小型批处理分派给管道工作者之前等待每个事件的时间以毫秒为单位。
 
 
 
 
 
-```shell
-curl -XGET 'localhost:9200/logstash-2018.08.11/_search?pretty&q=geoip.city_name=Buffalo'
-```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

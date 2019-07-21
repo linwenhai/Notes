@@ -21,6 +21,8 @@ export PATH=$JAVA_HOME/bin:$PATH
 source /etc/profile
 ```
 
+
+
 ### 2 Elasticsearch部署
 
 #### 2.1 OS配置
@@ -31,8 +33,8 @@ vi /etc/security/limits.conf
 
 ```
 ----添加如下内容,修改完成limits.conf，需重新登陆生效----
-- soft memlock unlimited 
-- hard memlock unlimited
+* 	soft 	memlock 	unlimited 
+* 	hard 	memlock 	unlimited
 ```
 
 
@@ -45,8 +47,6 @@ vi /etc/sysctl.conf
 -----添加如下内容-----
 vm.max_map_count=655360
 ```
-
-
 
 ```shell
 sysctl -p
@@ -80,6 +80,8 @@ discovery.zen.minimum_master_nodes: 2
 
 >node.name：需每个节点自定义名字
 >network.host：本节点IP
+>
+>discovery.zen.minimum_master_nodes：N/2 + 1(向下取整)
 
 
 
@@ -200,38 +202,41 @@ ln -s logstash-6.6.0 logstash
 cd /app/logstash/config
 ```
 
-```
+```yml
 input {
    beats {
    port => 10151
   }
 }
-
+ 
 filter {
-	date {
-		match => [ "timestamp", "dd/mmm/yyyy:hh:mm:ss z" ]
-		target => ["datetime"]
+    date {
+       match => [ "timestamp", "dd/mmm/yyyy:hh:mm:ss z" ]
+       target => ["datetime"]
   }
 }
 
 output {
-  if [fields][logtype] == "next-sfpay-core-jdk-app-monit-stdout"{
+   if [fields][logtype] == "next-sfpay-core-jdk-app-process-stdout"{
     stdout {codec => rubydebug}
     elasticsearch {
-      hosts => ["10.119.97.210:9200"]
-      index => "next-sfpay-core-jdk-app-monit-stdout-%{+YYYY.MM.dd}"
+      hosts => ["10.119.97.210:9200","10.119.97.219:9200","10.119.97.222:9200"]
+      index => "next-sfpay-core-jdk-app-process-stdout-%{+YYYY.MM.dd}"
     }
-  }	
-}
+  }
+} 
 ```
 
 
 
-#### 3.2 启动
+#### 3.2 启动/关闭
 
 ```shell
 nohup /app/logstash/bin/logstash -f /app/logstash/config/logstash.conf >/dev/null 2>&1 &
+ps -ef|grep logstash|awk '{print $2}'|xargs kill -9
 ```
+
+
 
 
 
@@ -304,7 +309,47 @@ sentinl-v6.6.1.zip\
 
 
 
+### 5 filebeat
 
+vi filebeat.yml
+
+```yml
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /app/logs/stdout*.log
+  fields:
+    logtype: next-sfpay-core-jdk-app-coupons-stdout
+  multiline:
+     pattern: ^\d{2}
+     negate: true
+     match: after
+
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+setup.template.settings:
+  index.number_of_shards: 3
+
+output.logstash:
+  hosts: ["10.119.99.6:10151","10.119.99.10:10151","10.119.99.12:10151"]
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+
+```
+
+
+
+```shell
+rm -rf /app/deploy/filebeat/data/registr
+cd /app/deploy/filebeat/
+chmod 755 filebeat
+nohup ./filebeat -e -c filebeat.yml>/dev/null 2>&1 &
+```
 
 
 
