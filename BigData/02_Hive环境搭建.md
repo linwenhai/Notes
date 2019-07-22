@@ -64,14 +64,7 @@ vi /etc/profile
 ```
 
 ```
-# 添加环境变量
-export JAVA_HOME=/app/jdk export JRE_HOME=${JAVA_HOME}/jre 
-export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib:$CLASSPATH 
-export PATH=$JAVA_HOME/bin:$PATH
-
-export HADOOP_HOME=/app/hadoop 
-export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
-
+--------添加环境变量----------
 export HIVE_HOME=/app/hive 
 export PATH=$PATH:$HIVE_HOME/bin
 ```
