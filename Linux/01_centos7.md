@@ -2,7 +2,7 @@
 
 
 
-#### 1 防火墙
+### 1 防火墙
 
 ```shell
 systemctl status firewalld.service		#查看防火墙状态
@@ -12,16 +12,17 @@ systemctl disable firewalld.service		#禁用防火墙
 
 
 
-#### 2 selinux
+### 2 selinux
 
 ```shell
-vi /etc/selinux/config			#关闭selinux
+vi /etc/selinux/config			
+#关闭selinux
 #把SELINUX=enforcing改为SELINUX=disabled即可
 ```
 
-#### 
 
-#### 3 设置163yum源
+
+### 3 设置163yum源
 
 http://mirrors.163.com/.help/centos.html
 
@@ -46,7 +47,7 @@ yum makecache
 
 
 
-#### 4 配置阿里源
+### 4 配置阿里源
 
 ```shell
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
@@ -61,7 +62,7 @@ yum makecache
 
 
 
-#### 5  本地yum源
+### 5  本地yum源
 
 ```shell
 vi /etc/yum.repos.d/rhel-source.repo
@@ -85,7 +86,7 @@ yum -y install gcc*		#安装软件
 
 
 
-#### 6 查看CPU
+### 6 查看CPU
 
 ```shell
 cat /proc/cpuinfo |grep "physical id"|sort |uniq|wc -l 	#查看物理CPU的个数
@@ -96,7 +97,7 @@ cat /proc/cpuinfo |grep MHz|uniq 			    #查看CPU的主频
 
 
 
-#### 7 中文乱码解决方法
+### 7 中文乱码解决方法
 
 ```shell
 locale -a |grep "zh_CN"			#查看系统是否安装中文语言包 
