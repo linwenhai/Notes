@@ -115,6 +115,22 @@ print(pets)
 
 
 
+### 7 使用用户输入来填充字典
+
+```python
+responses = {}
+active = True	#设置标志
+while active:
+    name = input("\nWhat is your name?")
+    response = input("Which mountain would you like to climb someday?")
+    responses[name] = response
+    repeat = input("Would you like te let another person respond?(yes/no)")
+    if repeat == 'no':
+        active = False
+for name,response in responses.items():
+    print(name + " would like climb " + response + ".")
+```
+
 
 
 
