@@ -1,5 +1,13 @@
 ## Logstash
 
+[TOC]
+
+
+
+
+
+
+
 ### 1 安装Logstash
 
 Logstash需要Java 8.不支持Java 9
@@ -35,9 +43,9 @@ hello world
 
 
 
-#### 2.1 测试filebeat-->logstash
+**测试filebeat-->logstash**
 
-##### 1】filebeat配置
+**1】filebeat配置**
 
 filebeat.yml
 
@@ -62,7 +70,7 @@ sudo ./filebeat -e -c filebeat.yml -d "publish"
 
 
 
-##### 2】logstash配置
+**2】logstash配置**
 
 ```conf
 input {
@@ -112,7 +120,7 @@ bin/logstash -f first-pipeline.conf --config.reload.automatic
 
 
 
-##### 1】当前界面输入
+**1】当前界面输入**
 
 ```ruby
 input { stdin { } }
@@ -120,7 +128,7 @@ input { stdin { } }
 
 
 
-##### 2】 filebeat输入
+**2】 filebeat输入**
 
 ```json
 input {
@@ -144,21 +152,67 @@ input {
 
 
 
-##### 1】grok
+**1】grok插件**
 
 grok模式的语法：%{SYNTAX:SEMANTIC}
 
-```ruby
+SYNTAX：代表匹配值的类型,例如3.44可以用NUMBER类型所匹配,127.0.0.1可以使用IP类型匹配。 
+SEMANTIC：代表存储该值的一个变量名称。
+
+`语法`指的就是匹配的模式，例如使用 NUMBER 模式可以匹配出数字，IP 则会匹配出 127.0.0.1 IP 地址。
+
+```python
+%{NUMBER:lasttime}%{IP:client}
+```
+
+默认情况下，所有“语义”都被保存成字符串，你也可以添加转换到的数据类型，目前转换类型只支持 int 和 float
+
+
+
+例子：
+
+```
+55.3.244.1 GET /index.html 15824 0.043
+```
+
+```yml
 filter {
-  grok {
-    match => { "message" => "%{COMBINEDAPACHELOG}" }
-  }
+	grok {
+		match => { "message" => "%{IP:client} %{WORD:method} %{URIPATHPARAM:request} %{NUMBER:bytes} %{NUMBER:duration}" }
+	}
+}
+```
+
+```
+输出结果：
+client: 55.3.244.1
+method: GET
+request: /index.html
+bytes: 15824
+duration: 0.043
+```
+
+
+
+**2】Geoip插件**
+
+示例：
+
+```yml
+filter {
+    geoip {
+        source => "message"
+    }
 }
 ```
 
 
 
-##### 2】date
+
+
+
+
+**3】date插件**
 
 日期过滤器用于解析字段中的日期，然后使用该日期或时间戳作为事件的logstash时间戳。
 

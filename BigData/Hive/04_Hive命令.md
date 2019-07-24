@@ -3,14 +3,16 @@
 ### 1 shell执行hive命令
 
 ```shell
-hive -e "select * from test01 limit 3";
+hive -e "select * from test.test01 limit 3";
+hive  -S -e "select * from test.test01 limit 3" >/tmp/test
 ```
 
 
 
 ### 2 从文件中执行hive查询
 
-```
+```shell
+hive -f /app/01/01.sql;
 hive> source /app/01/01.sql;
 ```
 
