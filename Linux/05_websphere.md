@@ -56,3 +56,10 @@ Dmgr_SOAP端口默认为8879，可以查看Dmgr/logs/AboutThisProfile.txt
 之后设置LANG=zh_CN.gb18030LANGUAGE=zh_CN.18030.
 安装nc，则界面中文显示正常 
 
+
+
+### 5 Websphere彻底卸载方法
+
+rm -rf /opt/.ibm
+rm -rf /root/vpd.properties
+
