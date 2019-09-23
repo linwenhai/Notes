@@ -1,63 +1,109 @@
 ## mysql二进制安装
 
-#### 1 下载编译好的二进制安装包
+### 1 下载编译好的二进制安装包
 
 mysql-5.7.12-linux-glibc2.5-x86_64.tar
 
-
-
-#### 2 解压
-
 ```shell
-tar -zxvf /app/install/mysql-5.7.12-linux-glibc2.5-x86_64.tar
-mv mysql-5.7.18-linux-glibc2.5-x86_64 mysql
+# yum安装所需相关依赖包
+yum -y install gcc-c++ 
+yum -y install zlib zlib-devel pcre pcre-devel
+yum -y install openssl-devel
+yum -y install libaio-devel.x86_64
+
+# 自带mysql的mariadb
+rpm -qa|grep mariadb
+rpm -e mariadb-libs  --nodeps
 ```
 
 
 
-#### 3 创建用户、目录、配置文件
+### 2 解压包
+
+```shell
+tar -zxvf /app/install/mysql-5.7.12-linux-glibc2.5-x86_64.tar
+ln -s mysql-5.7.18-linux-glibc2.5-x86_64 mysql
+```
+
+
+
+### 3 创建用户、目录、配置文件
 
 ```shell
 groupadd mysql
 useradd -r -g mysql mysql
 mkdir -p /app/mysql/data
+mkdir -p /app/mysql/log
 chown -R mysql:mysql /app/mysql/data
 vi /etc/my.cnf
 ```
 
-```
-[mysql]
-no-auto-rehash
-default-character-set=utf8
+>[client]
+>port = 3306
+>socket = /app/mysql/data/mysql.sock
+>
+>[mysqld]
+>server_id=10
+>port = 3306
+>user = mysql
+>character-set-server = utf8mb4
+>default_storage_engine = innodb
+>log_timestamps = SYSTEM
+>socket = /app/mysql/data/mysql.sock
+>basedir =/app/mysql
+>datadir = /app/mysql/data
+>pid-file = /app/mysql/data/mysql.pid
+>max_connections = 1000
+>max_connect_errors = 1000
+>table_open_cache = 1024
+>max_allowed_packet = 128M
+>open_files_limit = 65535
+>server-id=1
+>gtid_mode=on
+>enforce_gtid_consistency=on
+>log-slave-updates=1
+>log-bin=master-bin
+>log-bin-index = master-bin.index
+>relay-log = relay-log
+>relay-log-index = relay-log.index
+>binlog_format=row
+>log_error = /app/mysql/log/mysql-error.log 
+>skip-name-resolve
+>log-slave-updates=1
+>relay_log_purge = 0 
+>slow_query_log = 1
+>long_query_time = 1 
+>slow_query_log_file = /app/mysql/log/mysql-slow.log
 
-[mysqld]
-basedir = /app/mysql
-datadir = /app/mysql/data
-port = 3306
-socket = /app/mysql/data/mysql.sock
-character-set-server=utf8
-
-[client]
-port = 3306
-default-character-set=utf8
-socket = /app/mysql/data/mysql.sock
-```
 
 
-
-#### 4 安装数据库
+### 4 初始化数据库
 
 ```shell
-cd /app/mysql
-chown -R mysql:mysql ./
-cd /app/mysql/bin
-./mysqld --initialize --user=mysql --basedir=/app/mysql --datadir=/app/mysql/data
-chown -R mysql:mysql /app/mysql
+/app/mysql/bin/mysqld --defaults-file=/etc/my.cnf --initialize --user=mysql --basedir=/app/mysql --datadir=/app/mysql/data --innodb_undo_tablespaces=3 --explicit_defaults_for_timestamp
 ```
 
 
 
-#### 5 启动/关闭
+### 5 查看初始密码
+
+```shell
+grep 'password' /app/mysql/log/mysql-error.log
+```
+
+
+
+### 6 创建ssl加密
+
+```shell
+/app/mysql/bin/mysql_ssl_rsa_setup --datadir=/app/mysql/data
+```
+
+
+
+
+
+### 7 启动/关闭mysql
 
 ```shell
 /app/mysql/support-files/mysql.server stop
@@ -68,7 +114,7 @@ netstat -an|grep 3306
 
 
 
-#### 6 修改mysql的root用户密码
+### 8 修改mysql的root用户密码
 
 ```shell
 vi /etc/my.cnf
@@ -78,10 +124,15 @@ vi /etc/my.cnf
 skip-grant-tables
 
 ```shell
+#启停mysql
 /app/mysql/support-files/mysql.server stop
 /app/mysql/support-files/mysql.server start
+
+# 连接mysql服务器，-u后面跟用户名，-p表示需要输入密码
 /app/mysql/bin/mysql -uroot -p
-mysql> set password=password('sf123456');
+
+
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '123456';
 mysql> flush privileges;
 ```
 
@@ -99,7 +150,7 @@ skip-grant-tables
 
 
 
-#### 7 创建hive用户
+### 9 创建测试hive用户
 
 ```shell
 mysql> create user 'hive' identified by 'hive';
