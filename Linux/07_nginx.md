@@ -176,10 +176,13 @@ log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
 upstream kibana_web {
     server 192.168.1.11:8080    weight=1  max_fails=2  fail_timeout=30;
     server 192.168.1.12:8080    weight=1  max_fails=2  fail_timeout=30;
+    check interval=3000 rise=2 fall=5 timeout=1000 type=http;
+	check_http_send "HEAD /mwmonitor/check.jsp HTTP/1.0\r\n\r\n";
+	check_http_expect_alive http_2xx http_3xx;
 }
 ```
 
-
+>每个3秒检测一次，请求2次正常则标记realserver状态为up，如果检测5次都失败，则标记realserver的状态为down，超时时间为1秒。
 
 
 
