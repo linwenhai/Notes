@@ -1,12 +1,23 @@
-1 JDK
+版本：kafka_2.12-2.4.0.tgz
 
 
 
-2 zookeeper
+### 1 JDK环境
+
+1.8
 
 
 
-### 3 server.properties
+### 3 KAFKA环境
+
+```shell
+tar -xzf kafka_2.12-2.4.0.tgz
+cd kafka_2.12-2.4.0
+```
+
+
+
+server.properties
 
 修改如下内容
 
@@ -26,41 +37,89 @@ mkdir /app/kafka/logs
 
 
 
-### 4 启动
+### 4 启动KAFKA
 
-```shell
-/app/kafka/bin/kafka-server-start.sh -daemon /app/kafka/config/server.properties &
+```SHELL
+bin/zookeeper-server-start.sh config/zookeeper.properties
+bin/kafka-server-start.sh config/server.properties
 ```
+
+
+
+
+
+
 
 
 
 ### 5 创建topic
 
 ```shell
-/app/kafka/bin/kafka-topics.sh --create --zookeeper 10.203.197.48:2181,10.203.197.43:2181,10.203.197.113:2181 --replication-factor 2 --partitions 1 --topic tttt
+bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test
 ```
 
 参数解释:
-　　--replication-factor 2	复制两份
+　　--replication-factor 1	复制1份
 　　--partitions 1	创建1个分区
-　　--topic tttt	topic 名称
+　　--topic test	topic名称
 
 
 
 查看已经存在的topic
 
 ```shell
-cd /app/kafka/bin/
-./kafka-topics.sh --list --zookeeper 10.203.197.48:2181,10.203.197.43:2181,10.203.197.113:2181
+bin/kafka-topics.sh --list --bootstrap-server localhost:9092
 ```
 
 
 
-### 6 删除topic
+### 6 生成数据
 
 ```shell
-./kafka-topics.sh --delete --zookeeper 10.203.197.48:2181,10.203.197.43:2181,10.203.197.113:2181 --topic tttt
+# 测试生成数据到topic
+bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test
 ```
+
+
+
+### 7 消费数据
+
+```shell
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
+```
+
+
+
+
+
+### 8 启动另2个节点（同OS上）
+
+```shell
+cp config/server.properties config/server-1.properties
+cp config/server.properties config/server-2.properties
+```
+
+
+
+修改配置文件，broker.id 需每个节点不一样
+
+```
+config/server-1.properties:
+    broker.id=1
+    listeners=PLAINTEXT://:9093
+    log.dirs=/tmp/kafka-logs-1
+ 
+config/server-2.properties:
+    broker.id=2
+    listeners=PLAINTEXT://:9094
+    log.dirs=/tmp/kafka-logs-2
+```
+
+
+
+
+
+
 
 
 

@@ -46,9 +46,9 @@ node.data: false
 cd /app/kibana/bin/
  
 # 启动
-nohup ./kibana 2>>kibana.log &
+nohup ./kibana &
  
 # 停止
-ps -ef|grep kibana|awk '{print $2}'|xargs kill -9
+ps -ef|grep node|awk '{print $2}'|xargs kill -9
 ```
 

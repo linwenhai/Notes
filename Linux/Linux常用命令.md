@@ -336,3 +336,11 @@ rpm -e mariadb-libs  --nodeps
 
 
 
+### 17 mount
+
+```shell
+mount was.ISO /mnt -o loop
+```
+
+
+
