@@ -57,10 +57,10 @@ output {
 
 ```shell
 # --config.test_and_exit选项会解析您的配置文件并报告任何错误
-bin/logstash -f first-pipeline.conf --config.test_and_exit
+/app/logstash/bin/logstash -f kms_kafka.conf --config.test_and_exit
  
 # --config.reload.automatic选项启用自动配置重新加载
-bin/logstash -f first-pipeline.conf --config.reload.automatic
+/app/logstash/bin/logstash -f kms_kafka.conf --config.reload.automatic
  
 # 启动
 nohup /app/logstash/bin/logstash -f /app/logstash/config/logstash.conf >/dev/null 2>&1 &

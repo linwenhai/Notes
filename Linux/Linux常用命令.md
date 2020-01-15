@@ -344,3 +344,20 @@ mount was.ISO /mnt -o loop
 
 
 
+### 18 split
+
+```sh
+split -l 100000 nc_20200113.csv -d -a 3 nc_
+```
+
+>-l 100000：切割行数
+>-d -a 3 nc：使用“nc”开头3位数字为后缀
+
+
+
+
+
+
+
+
+

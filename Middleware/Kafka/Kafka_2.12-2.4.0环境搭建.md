@@ -1,18 +1,49 @@
-## Kafka_2.12-2.4.0环境搭建
+## Kafka_2.11-2.1.1环境搭建
 
-版本：kafka_2.12-2.4.0.tgz
+版本：kafka_2.11-2.1.1.tgz
 
-### 1 JDK和zookeeper环境
+### 1 JDK
 
-
-
-
-
-### 2 KAFKA环境
+```
+export JAVA_HOME=/app/jdk1.8.0_201 
+export PATH=$JAVA_HOME/bin:$PATH 
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+```
 
 ```shell
-tar -xzf kafka_2.12-2.4.0.tgz
-cd kafka_2.12-2.4.0
+java -version
+```
+
+
+
+### 2 Zookeeper
+
+```
+tickTime=2000
+initLimit=10
+syncLimit=5
+dataDir=/app/zookeeper/data
+clientPort=2181
+server.1=10.216.23.13:2888:3888
+server.2=10.216.23.14:2888:3888
+server.3=10.216.23.15:2888:3888
+```
+
+```shell
+mkdir /app/zookeeper/data
+/app/zookeeper/bin/zkServer.sh start
+```
+
+
+
+
+
+### 3 KAFKA环境
+
+```shell
+tar -xzf kafka_2.11-2.1.1.tgz
+ln -s kafka_2.11-2.1.1 kafka
+cd kafka
 ```
 
 server.properties
@@ -30,108 +61,86 @@ zookeeper.connect=10.216.23.13:2181,10.216.23.14:2181,10.216.23.15:2181
 
 broker.id和listeners
 
-
-
+```shell
 mkdir -p /app/kafka/logs
+```
+
+
 
 
 
 ### 3 启动KAFKA
 
 ```shell
-/app/kafka/bin/kafka-server-start.sh /app/kafka/config/server.properties >/dev/null 2>&1 &
-
+/app/kafka
+bin/kafka-server-start.sh config/server.properties >/dev/null 2>&1 &
 
 ps -ef|grep kafka|awk '{print $2}'|xargs kill -9
 ```
 
 
 
-### 4 创建topic
+### 4 测试
 
 ```shell
-bin/kafka-topics.sh --create --bootstrap-server 10.216.23.13:9092 --replication-factor 1 --partitions 1 --topic test
+# 创建topic
+bin/kafka-topics.sh --create --zookeeper 10.216.23.13:2181 --replication-factor 1 --partitions 1 --topic test
 
+# 查看主题列表
+bin/kafka-topics.sh --list --zookeeper 10.216.23.13:2181
 
-bin/kafka-topics.sh --create --bootstrap-server 10.216.23.13:9092 --replication-factor 3 --partitions 1 --topic test-2
-
-```
-
-参数解释: 　　
-
-- replication-factor 1 复制1份 　　
-- partitions 1 创建1个分区 　　
-- topic test topic名称
-
-
-
-### 5 测试
-
-```shell
-# 发送一些消息到topic
+# 发送消息
 bin/kafka-console-producer.sh --broker-list 10.216.23.13:9092 --topic test
-```
 
-
-
-```shell
-# 将消息转储到标准输出
+# 启动消费者，标准输出
 bin/kafka-console-consumer.sh --bootstrap-server 10.216.23.13:9092 --topic test --from-beginning
+
 ```
 
 
 
-### 6 查询
-
-1】查看已经存在的topic
+### 5 垂直集群
 
 ```shell
-bin/kafka-topics.sh --list --bootstrap-server 10.216.23.13:9092
+cp config/server.properties config/server-1.properties
+cp config/server.properties config/server-2.properties
 ```
 
-
-
-2】查看主题
+```
+config/server-1.properties:
+    broker.id=1
+    listeners=PLAINTEXT://:9093
+    log.dirs=/tmp/kafka-logs-1
+ 
+config/server-2.properties:
+    broker.id=2
+    listeners=PLAINTEXT://:9094
+    log.dirs=/tmp/kafka-logs-2
+```
 
 ```shell
-bin/kafka-topics.sh --describe --bootstrap-server 10.216.23.13:9092 --topic test
+# 启动新节点
+bin/kafka-server-start.sh config/server-1.properties &
+bin/kafka-server-start.sh config/server-2.properties &
 ```
 
 
 
-3】查询集群描述
+```shell
+# 创建3分区1副本的主题test2
+bin/kafka-topics.sh --create --zookeeper 10.216.23.13:2181 --replication-factor 1 --partitions 3 --topic test2
+
+# 查看主题test2信息
+bin/kafka-topics.sh --describe --zookeeper 10.216.23.13:2181 --topic test2
+
+# 查看消费组信息
+bin/kafka-consumer-groups.sh --bootstrap-server 10.216.23.13:9092 --describe --group my-group
+
+bin/kafka-consumer-groups.sh --bootstrap-server 10.216.23.13:9092 --list
+
+
+
+
 
 ```
-bin/kafka-topics.sh --describe --zookeeper 10.216.23.13:2181
-```
 
-
-
-4】消费者列表查询
-
-```
-bin/kafka-topics.sh --zookeeper 10.216.23.13:2181 --list
-```
-
-
-
-
-
-1 创建topic
-bin/kafka-topics.sh --create --bootstrap-server 10.216.23.13:9092 --replication-factor 1 --partitions 3 --topic mytest
-
-
-2 查看topic的详细信息
-bin/kafka-topics.sh --describe --bootstrap-server 10.216.23.13:9092 --topic mytest
-
-
-3 创建producer
-节点1
-bin/kafka-console-producer.sh --broker-list 10.216.23.13:9092 --topic mytest
-
-
-4 创建consumer1,consumer12，指定组
-节点2
-bin/kafka-console-consumer.sh --bootstrap-server 10.216.23.13:9092 --topic mytest --consumer-property group.id=group_mytest
-节点3
-bin/kafka-console-consumer.sh --bootstrap-server 10.216.23.13:9092 --topic mytest --consumer-property group.id=group_mytest
