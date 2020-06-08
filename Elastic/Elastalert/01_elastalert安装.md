@@ -117,8 +117,9 @@ email_reply_to: 18127002705@163.com             #发送邮件的邮箱
 from_addr: 18127002705@163.com
 alert:
 - "email" #报警类型
-email:
-- "498733843@qq.com"    #收件人地址
+email:	#收件人地址
+- "498733843@qq.com"    
+- "789123456@qq.com"
 ```
 
 

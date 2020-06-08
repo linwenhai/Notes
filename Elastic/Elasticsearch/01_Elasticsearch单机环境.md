@@ -75,3 +75,32 @@ bin/elasticsearch -d
 bin/elasticsearch-setup-passwords interactive
 ```
 
+```
+Enter password for [elastic]: 
+Reenter password for [elastic]: 
+Enter password for [apm_system]: 
+Reenter password for [apm_system]: 
+Enter password for [kibana]: 
+Reenter password for [kibana]: 
+Enter password for [logstash_system]: 
+Reenter password for [logstash_system]: 
+Enter password for [beats_system]: 
+Reenter password for [beats_system]: 
+Enter password for [remote_monitoring_user]: 
+Reenter password for [remote_monitoring_user]: 
+Changed password for user [apm_system]
+Changed password for user [kibana]
+Changed password for user [logstash_system]
+Changed password for user [beats_system]
+Changed password for user [remote_monitoring_user]
+Changed password for user [elastic]
+```
+
+
+
+
+
+http://192.168.152.11:9200/
+
+
+

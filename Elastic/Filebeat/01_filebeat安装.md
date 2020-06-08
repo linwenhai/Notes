@@ -33,6 +33,14 @@ setup.ilm.enabled: false
 
 
 
+  multiline.pattern: '^[0-9]{4}-[0-9]{2}'
+  multiline.negate: true
+  multiline.match: afte
+
+
+
+
+
 ### 2 启动/关闭
 
 ```shell
