@@ -2,7 +2,7 @@
 
 
 
-### 1 filebeat.yml
+#### 1 filebeat.yml
 
 ```
 filebeat.inputs:
@@ -41,11 +41,11 @@ setup.ilm.enabled: false
 
 
 
-### 2 启动/关闭
+#### 2 启动/关闭
 
 ```shell
 #启动
-nohup /opt/filebeat/filebeat -e -c /opt/filebeat/filebeat.yml &
+nohup /opt/filebeat/filebeat -e -c /opt/filebeat/filebeat.yml >/dev/null 2>&1 &
 ```
 
 ```shell
@@ -53,10 +53,7 @@ nohup /opt/filebeat/filebeat -e -c /opt/filebeat/filebeat.yml &
 ps -ef|grep filebeat|awk '{print $2}'|xargs kill -9
 ```
 
-```shell
-#默认端口：16900
-ps -ef|grep filebeat
-```
+
 
 
 
