@@ -5,7 +5,7 @@
 
 
 ```shell
-curl -u 835084:sf123456 -T dubbo-admin.tar.gz ftp://10.116.218.80/835084/
+curl -u 835084:sf123456 -T NCExternalInterface.war ftp://10.116.218.80/835084/
 ```
 
 
