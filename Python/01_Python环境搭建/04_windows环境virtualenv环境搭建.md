@@ -33,7 +33,7 @@ cd D:\Python\django_project\env\Scripts
 activate
 ```
 
-![image-20200902221805446](D:\Notes\Python\Python环境搭建\image\image-20200902221805446.png)
+![image-20200902221805446](.\image\image-20200902221805446.png)
 
 
 
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
 在虚拟环境中执行该应用
 
-![image-20200902222239602](D:\Notes\Python\Python环境搭建\image\image-20200902222239602.png)
+![image-20200902222239602](.\image\image-20200902222239602.png)
 
 
 
@@ -77,5 +77,5 @@ if __name__ == '__main__':
 
 退出虚拟环境，使用deactivate命令。
 
-![image-20200902222436958](D:\Notes\Python\Python环境搭建\image\image-20200902222436958.png)
+![image-20200902222436958](.\image\image-20200902222436958.png)
 

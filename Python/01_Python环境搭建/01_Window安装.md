@@ -6,21 +6,21 @@ python官方下载地址
 https://www.python.org/downloads/windows/
 选择 executable installer ，根据自己系统选择64位还是32位的安装包。
 
-![image-20200902211506004](D:\Notes\Python\Python环境搭建\image\image-20200902211506004.png)
+![image-20200902211506004](.\image\image-20200902211506004.png)
 
 下载完成后双击运行
 
 勾选Add Python 3.7 to PATH，方便在cmd命令行中调用，然后选择Customize installation。
 
-![image-20200902211549841](D:\Notes\Python\Python环境搭建\image\image-20200902211549841.png)
+![image-20200902211549841](.\image\image-20200902211549841.png)
 
 pip必选，其他根据自己的情况选择，无Pycharm等python编译器的建议勾选tcl/tk and IDEA，点击Next。
 
-![image-20200902211623804](D:\Notes\Python\Python环境搭建\image\image-20200902211623804.png)
+![image-20200902211623804](.\image\image-20200902211623804.png)
 
 上面保持默认，安装目录可以选择安装到系统盘之外的其他盘，点击Install。
 
-![image-20200902211641479](D:\Notes\Python\Python环境搭建\image\image-20200902211641479.png)
+![image-20200902211641479](.\image\image-20200902211641479.png)
 
 安装完成。
 
