@@ -133,7 +133,7 @@
  chmod 755 filebeat
   
  # 启动
- nohup /app/filebeat/filebeat -e -c /app/filebeat/filebeat.yml &
+ nohup /app/filebeat/filebeat -e -c /app/filebeat/filebeat.yml >/dev/null 2>&1 &
   
  # 关闭
  ps -ef|grep filebeat|awk '{print $2}'|xargs kill -9

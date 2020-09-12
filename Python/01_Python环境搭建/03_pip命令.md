@@ -1,17 +1,32 @@
 ### 1 pip换源
 
-在 *C:\Users\用户名* 目录下创建pip文件夹；
+**1】windows**
 
-创建文件pip.ini；
-
-内容：
+在 *C:\Users\用户名* 目录下创建pip文件夹及文件pip.ini
 
 ```
 [global]
 index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
-阿里云的源：http://mirrors.aliyun.com/pypi/simple/
+**2】linux**
+
+```shell
+vi ~/.config/.pip
+```
+
+```
+[global]
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+>常用的国内源：
+>
+>阿里云 http://mirrors.aliyun.com/pypi/simple/
+>中国科技大学 https://pypi.mirrors.ustc.edu.cn/simple/
+>豆瓣(douban) http://pypi.douban.com/simple/
+>清华大学 https://pypi.tuna.tsinghua.edu.cn/simple/
+>中国科学技术大学 http://pypi.mirrors.ustc.edu.cn/simple/
 
 
 
