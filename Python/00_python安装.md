@@ -1,6 +1,6 @@
-## Window安装
+### 1 Window安装
 
-### 1 安装python
+#### 1.1 安装python
 
 python官方下载地址
 https://www.python.org/downloads/windows/
@@ -26,7 +26,7 @@ pip必选，其他根据自己的情况选择，无Pycharm等python编译器的�
 
 
 
-### 2 pip换源
+#### 1.2 pip换源
 
 在 *C:\Users\用户名* 目录下创建pip文件夹；
 
@@ -43,7 +43,7 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 
 
 
-### 3 pip用法
+#### 1.3 pip用法
 
 1】查看已经安装的python库
 
@@ -67,5 +67,22 @@ pip list -o
 
 ```
 pip install -U setuptools
+```
+
+
+
+### 2 LInux安装
+
+
+
+```shell
+yum install gcc patch libffi-devel python-devel zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel -y
+```
+
+
+
+```shell
+./configure --prefix=/opt/python3/ 
+make && make install
 ```
 
