@@ -37,3 +37,28 @@ jstack <PID> > jstack.log
 - RUNNABLE : 线程处于执行中
 - BLOCKED : 线程被阻塞
 - WAITING : 线程正在等待
+
+分析工具：IBM Thread and Monitor Dump Analyzer for Java (TMDA)
+
+https://www.ibm.com/support/pages/ibm-thread-and-monitor-dump-analyzer-java-tmda
+
+```bash
+java -jar jca*.jar
+```
+
+
+
+线程分析文章：
+
+https://blog.csdn.net/qq_19734597/article/details/87855983
+
+
+
+
+
+```bash
+top -Hp <进程ID>		# 查看CPU高的线程ID
+printf '%x\n' <线程ID>	# 转换16进制
+jstack -F <进程ID>|grep -A 20 <16进制线程ID> >thread.log
+```
+
