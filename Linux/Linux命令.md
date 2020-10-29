@@ -1,4 +1,4 @@
-## 常用命令
+## Linux命令
 
 ### 1 zip
 
@@ -39,8 +39,6 @@ sz 1.log
 
 
 
-
-
 ### 3 date
 
 ```shell
@@ -58,8 +56,14 @@ date "+%Y-%m-%d %H:%M:%S"
 
 ```shell
 # 获取网站http状态码
-curl -o /dev/null -s -w "http_code:%{http_code}\n" http://www.baidu.com
+curl -I -m 5 -o /dev/null -s -w '%{http_code}\n' http://www.baidu.com
 ```
+
+>-I ：仅测试HTTP头
+>-m 5 ：最多查询5s
+>-o /dev/null ：屏蔽原有输出信息
+>-s ：不输出任何东西
+>-w %{http_code} ：控制额外输出
 
 
 
@@ -347,7 +351,7 @@ ls *.log|xargs rm -rf {}
 
 ```shell
 # kill掉haproxy进程
-ps -ef|grep haproxy|grep -v grep|awk '{print $2}'|xargs kill -9 {}
+ps -ef|grep java|grep -v grep|awk '{print $2}'|xargs kill -9 {}
 ```
 
 
@@ -367,14 +371,12 @@ StrictHostKeyChecking no
 
 
 
-### 19 tcpdump
+### 19 tcpdum
 
 ```shell
 # 监视所有送到主机hostname的数据包
 tcpdump -i ens33 dst host 192.168.198.11 >/tmp/1.log
 ```
-
-
 
 ```shell
 # 截获主机hostname发送的所有数据
@@ -389,4 +391,20 @@ tcpdump -i ens33 src host 192.168.198.11 >/tmp/1.log
 top		# 查看OS所有进程状态
 top -Hp <PID>		# 查看单个进程各个线程状态
 ```
+
+
+
+### 21 vi
+
+| 移动光标 | 描述                     |
+| -------- | ------------------------ |
+| gg       | 移到文章的开头           |
+| G        | 移动到文章的最后         |
+| $        | 移动到光标所在行的"行尾" |
+| ^        | 移动到光标所在行的"行首" |
+| dd       | 删除光标所在行           |
+| yy       | 复制光标所在行           |
+| p        | 粘贴                     |
+
+
 

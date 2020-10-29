@@ -1,6 +1,14 @@
 ## Hive1.2.2环境搭建
 
-### 1 创建库和用户
+![yo2sgi0ktk](D:\Notes\BigData\Hive\image\yo2sgi0ktk.png)
+
+下载：
+
+https://mirrors.tuna.tsinghua.edu.cn/apache/hive/hive-1.2.2/apache-hive-1.2.2-bin.tar.gz
+
+
+
+### 1 创建mysql库和用户
 
 ```sql
 mysql> create user 'hive' identified by 'hive';
@@ -10,20 +18,22 @@ mysql> flush privileges;
 ```
 
 ```sql
-mysql -uhive -phive
+bin/mysql -uhive -phive
 mysql> create database hive;
 mysql> show databases;
 ```
 
 
 
-### 2 hive-site.xml配置文件
+### 2 配置hive
+
+1】conf/hive-site.xml配置文件
 
 ```xml
 <configuration>
     <property>
         <name>javax.jdo.option.ConnectionURL</name>
-        <value>jdbc:mysql://10.203.197.48:3306/hive?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
+        <value>jdbc:mysql://192.168.100.11:3306/hive?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
     </property>
     <property>
         <name>javax.jdo.option.ConnectionDriverName</name>
@@ -44,70 +54,58 @@ mysql> show databases;
 </configuration>
 ```
 
-
-
-### 3 MySQL驱动包
+2】MySQL驱动包
 
 ```bash
 tar -zxvf apache-hive-1.2.2-bin.tar.gz
-ln -s apache-hive-1.2.2-bin hive
-cp mysql-connector-java-5.1.40-bin.jar /app/hive/lib/
+cp mysql-connector-java-5.1.40-bin.jar /opt/hive/lib/
 ```
 
-
-
-### 4 环境变量
+3】环境变量
 
 ```bash
 vi /etc/profile
 ```
 
->export JAVA_HOME=/app/jdk export JRE_HOME=${JAVA_HOME}/jre 
->export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib:$CLASSPATH 
->export PATH=$JAVA_HOME/bin:$PATH
->
->export HADOOP_HOME=/app/hadoop 
->export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
->
->export HIVE_HOME=/app/hive 
+>export HIVE_HOME=/opt/hive 
 >export PATH=$PATH:$HIVE_HOME/bin
 
 ```bash
 source /etc/profile
 ```
 
-
-
-### 5 hive初始化
+4】hive初始化
 
 ```bash
-schematool -dbType mysql -initSchema
+bin/schematool -dbType mysql -initSchema
 ```
 
 
 
-### 6 创建hive数据库
+### 3 运行hive
 
 ```bash
+bin/hive
+```
+
+
+
+### 4 测试
+
+```bash
+# 创建myhive
 hive> create database myhive;
-hive> use myhive;
-hive> select current_database();    	--查看当前正在使用的数据库
 ```
 
-
-
-### 7 创建表
-
 ```bash
+# 创建表student
+hive> use myhive;
 hive> create table student(id int, name string, sex string, age int, department string) row format delimited fields terminated by ",";
 ```
 
-
-
-### 8 创建TXT
-
 ```bash
-vi /app/student.txt
+# 创建TXT
+vi /tmp/student.txt
 ```
 
 ```
@@ -134,22 +132,11 @@ vi /app/student.txt
 95015,王君,男,18,MA
 ```
 
-
-
-### 9 往表中加载数据
-
 ```bash
-hive> load data local inpath "/app/student.txt" into table student;
+# 往表中加载数据
+hive> load data local inpath "/tmp/student.txt" into table student;
 hive> select * from student;
 ```
 
 
-
-### 10 查看表结构
-
-```bash
-hive> desc student;
-hive> desc extended student;
-hive> desc formatted student;
-```
 
