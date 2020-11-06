@@ -17,50 +17,68 @@ Django版本：django 2.1.8
 
 
 
-### 1 learning_log项目
+## 一 Notes项目
 
-#### 1.1 创建项目
+#### 1 创建项目
 
 ```bash
-mkdir -p /opt/Projects/learning_log
-cd /opt/Projects/learning_log
+mkdir -p /opt/Projects/notes
+cd /opt/Projects/notes
 python -m venv venv		# 创建虚拟环境
 source venv/bin/activate	# 激活虚拟环境
 deactivate		# 退出虚拟环境
 ```
 
-
-
 ```bash
-pip install django==2.1.8		# 安装指定版本django
-django-admin startproject learning_log	# 创建项目
-python manage.py startapp learning_logs	# 创建应用程序
-python manage.py migrate	# 创建数据库
+pip install django==2.2.2			# 安装指定版本django
+django-admin startproject notes .	# 创建项目
+python manage.py startapp web		# 创建应用程序
 ```
 
 
 
-```bash
-/opt/Project/learning_log/learning_log/settings.py
-```
+#### 2 配置文件(settings.py)
+
+notes/settings.py
 
 ```python
-INSTALLED_APPS = (
-    ...
-    'learning_logs',	# 添加应用程序
-)
-```
+#coding=utf-8
 
-```bash
+ALLOWED_HOSTS = ["*"]
+
+INSTALLED_APPS = (
+    --snip--
+    'bookapp',	# 添加应用程序
+)
+
+TEMPLATES = [
+    {
+        --snip--
+        'DIRS': [os.path.join(BASE_DIR, '')],	# 添加网页模板路径
+        --snip--
+    },
+]
+
+# 更改数据库信息
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'book',
+        'USER': 'book',
+        'PASSWORD': '123456',
+        'HOST': '192.168.100.11',
+        'PORT': '3306',
+    }
+}
+
 LANGUAGE_CODE = 'zh-hans'	# 更改显示语言
+
 TIME_ZONE = 'Asia/Shanghai'
 ```
 
-```python
-ALLOWED_HOSTS = ["*"]
-```
 
 
+#### 3 运行项目
 
 ```bash
 # 测试项目
@@ -69,90 +87,105 @@ python manage.py runserver 192.168.100.11:8000
 
 
 
-#### 1.2 模型设计
+#### 4 模型设计(models.py)
 
-```bash
-/opt/Project/learning_log/learning_logs/models.py
-```
+web/models.py
 
 ```python
 #coding=utf-8
 from django.db import models
+
 class Topic(models.Model):
-	"""用户学习的主题"""
-	text = models.CharField(max_length=200)
-	date_added = models.DateTimeField(auto_now_add=True)
-	def __str__(self):
-		"""返回模型的字符串表示"""
-		return self.text
+	"""笔记主题"""
+	topic_name = models.CharField(max_length=200)	# 200个字符
+	ctime = models.DateTimeField(auto_now_add=True)	# 自动设置成当前日期和时间
+	def __str__(self):	# 显示有关主题的信息
+		return self.topic_name
 
 class Entry(models.Model):
-	"""学到的有关某个主题的具体知识"""
-	topic = models.ForeignKey(Topic,on_delete=models.CASCADE,)
+	"""笔记内容"""
+	topic = models.ForeignKey(Topic,on_delete=models.CASCADE,)	# 外键
 	text = models.TextField()
-	date_added = models.DateTimeField(auto_now_add=True)
-	class Meta:
+	ctime = models.DateTimeField(auto_now_add=True)
+	class Meta:	# 使用entries表示多个条目
 		verbose_name_plural = 'entries'
 	def __str__(self):
-		"""返回模型的字符串表示"""
 		return self.text[:50] + "..."
 ```
 
-
-
 ```bash
 # 模型数据写数据库
-python manage.py makemigrations learning_logs
+python manage.py makemigrations web
 python manage.py migrate
 ```
 
 
 
-#### 1.3 后台管理
+#### 5 后台管理(admin.py)
 
 ```bash
 # 创建管理员
 python manage.py createsuperuser
 ```
 
-```bash
-# 后台注册
-/opt/Project/learning_log/learning_logs/admin.py
-```
+web/admin.py
 
 ```python
+#coding=utf-8
 from django.contrib import admin
 from learning_logs.models import Topic，Entry
-admin.site.register(Topic)
-admin.site.register(Entry)
+
+class TopicAdmin(admin.ModelAdmin):
+    list_display = ['id','topic_name','ctime']
+class EntryAdmin(admin.ModelAdmin):
+    list_display = ['id', 'text','ctime']
+
+admin.site.register(Topic,TopicAdmin)
+admin.site.register(Entry,EntryAdmin)
 ```
 
 浏览器访问：http://192.168.100.11:8000/admin/
 
-添加主题Chess和Rock Climbing
+添加主题和内容
 
 
 
-#### 1.4 创建网页
+#### 6 映射URL(urls.py)
 
-1】主页URL
+1】books/urls.py
 
+```python
+from django.contrib import admin
+from django.urls import path
+from django.conf.urls import include, url
 
-
-
-
-
-
-
-
-
-
-#### 1.4 视图
-
-```bash
-# 更新视图
-/opt/Project/test1/booktest/views.py
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    url(r'^', include('bookapp.urls')),
+]
 ```
+
+
+
+2】web/urls.py
+
+```python
+#coding=utf-8
+from django.conf.urls import url
+from booktest import views
+urlpatterns = [
+    url(r'^$', views.index),
+    url(r'^(\d+)/$',views.detail),
+]
+```
+
+
+
+
+
+#### 7 编写视图(views.py)
+
+web/views.py
 
 ```python
 #coding=utf-8
@@ -178,101 +211,17 @@ def detail(reqeust, bid):
 
 
 
-#### 1.5 URL
-
-```bash
-# 更新books目录URL
-/opt/Project/test1/test1/urls.py
-```
-
-```python
-from django.contrib import admin
-from django.urls import path
-from django.conf.urls import include, url
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    url(r'^', include('bookapp.urls')),
-]
-```
+#### 8 编写网页
 
 
 
-```bash
-# 更新bookapp目录URL
-/opt/Project/test1/booktest/urls.py
-```
-
-```python
-#coding=utf-8
-from django.conf.urls import url
-from booktest import views
-urlpatterns = [
-    url(r'^$', views.index),
-    url(r'^(\d+)/$',views.detail),
-]
-```
 
 
 
-#### 1.6 模板
-
-```bash
-# 添加模板路径
-/opt/Project/test1/test1/settings.py
-```
-
-```python
-'DIRS': [os.path.join(BASE_DIR, 'templates')],
-```
 
 
 
-```bash
-# 创建首页模板
-/opt/Project/test1/templates/booktest/index.html
-```
 
-```python
-<html>
-<head>
-    <title>首页</title>
-</head>
-<body>
-<h1>图书列表</h1>
-<ul>
-    {%for book in booklist%}
-    <li>
-      <a href="/{{book.id}}/">{{book.btitle}}</a>
-    </li>
-    {%endfor%}
-</ul>
-</body>
-</html>
-```
-
-
-
-```bash
-# 创建内容模板
-/opt/Project/test1/templates/bookapp/detail.html
-```
-
-```html
-<html>
-<head>
-    <title>详细页</title>
-</head>
-<body>
-<h1>{{book.btitle}}</h1>
-<ul>
-    {%for hero in heros%}
-    	<li>{{hero.hname}}---{{hero.hcomment}}</li>
-    {%endfor%}
-</ul>
-</body>
-</html>
-```
 
 
 
