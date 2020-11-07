@@ -1,4 +1,0 @@
-```bash
-/opt/Projects
-```
-
