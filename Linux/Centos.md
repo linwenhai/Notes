@@ -35,6 +35,19 @@ yum makecache
 
 
 
+```bash
+sed -i 's#mirrors.cloud.aliyuncs.com#mirrors.aliyun.com#' CentOS-Base.repo
+sed -i 's#aliyuncs#aliyun#' CentOS-Base.repo
+yum clean all
+yum makecache
+```
+
+
+
+
+
+
+
 ### 4 yum配置本地源
 
 ```shell

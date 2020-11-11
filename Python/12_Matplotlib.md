@@ -21,22 +21,20 @@ Matplotlib 是一个Python的 2D绘图库。
 
 
 
-### 1 绘制折线图
+### 2 绘制折线图
 
 ```python
 #coding:utf-8
-
-"""绘制折线图例子"""
 import matplotlib.pyplot as plt
 
 x=[1,2,3,4,5]
-y = [1,4,9,16,25]
+y=[1,4,9,16,25]
 
 plt.plot(x,y,linewidth=5)   # 参数linewidth：线条粗细
 
 plt.rcParams['font.sans-serif'] = ['SimHei']    # 设置中文乱码问题
 plt.title("开方图",fontsize=24)    # 标题
-plt.xlabel("值",fontsize=14)     # X轴，Y轴标签
+plt.xlabel("原始值",fontsize=14)     # X轴，Y轴标签
 plt.ylabel("开方值",fontsize=14)
 plt.tick_params(axis='both',labelsize=14)   #设置刻度的样式
 
