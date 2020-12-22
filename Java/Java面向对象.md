@@ -342,6 +342,8 @@ class Hello {
 
 
 
+
+
 ### 4 关键字
 
 #### 4.1 this关键字
@@ -463,6 +465,194 @@ class MyClass{
 ### 7 继承
 
 Java使用`extends`关键字来实现继承。
+
+```java
+class Person {
+    private String name;
+    private int age;
+
+    public String getName() {...}
+    public void setName(String name) {...}
+    public int getAge() {...}
+    public void setAge(int age) {...}
+}
+
+class Student extends Person {
+    // 不要重复name和age字段/方法,
+    // 只需要定义新增score字段/方法:
+    private int score;
+
+    public int getScore() { … }
+    public void setScore(int score) { … }
+}
+```
+
+
+
+### 8 多态
+
+Java的实例方法调用是基于运行时的实际类型的动态调用，而非变量的声明类型，称之为**多态**。
+
+多态是指，针对某个类型的方法调用，其真正执行的方法取决于运行时期实际类型的方法。
+
+在继承关系中，子类如果定义了一个与父类方法签名完全相同的方法，被称为覆写（Override）。
+
+加上`@Override`可以让编译器帮助检查是否进行了正确的覆写。
+
+```java
+// 测试多态
+public class Main {
+    public static void main(String[] args) {
+        Person p = new Student();
+        p.run(); // 打印Student.run
+    }
+}
+
+class Person {
+    public void run() {
+        System.out.println("Person.run");
+    }
+}
+
+class Student extends Person {
+    @Override
+    public void run() {
+        System.out.println("Student.run");
+    }
+}
+```
+
+
+
+```java
+//测试多态
+package com.test;
+public class TestPolymorphic {
+	public static void main(String[] args) {
+		Income[] incomes=new Income[] {
+				new Income(3000),
+				new Salary(7500),
+				new SSA(15000)
+		};
+		System.out.println(totalTax(incomes));
+	}
+	
+	public static double totalTax(Income... incomes) {
+		double total=0;
+		for(Income income:incomes) {
+			total+=income.getTax();
+		}
+		return total;
+	}
+	
+}
+
+class Income{
+	protected double income;
+	public Income(double income) {
+		this.income=income;
+	}
+	public double getTax() {
+		return income*0.1;
+	}
+}
+
+class Salary extends Income{
+	public Salary(double income) {
+		super(income);
+	}
+	
+	@Override
+	public double getTax() {
+		if(income<=5000) {
+			return 0;
+		}
+		return (income-5000)*0.2;
+	}
+}
+
+class SSA extends Income{
+	public SSA(double income) {
+		super(income);
+	}
+	
+	@Override
+	public double getTax() {
+		return 0;
+	}
+}
+```
+
+
+
+#### 8.1 覆写Object方法
+
+- `toString()`：把instance输出为`String`；
+- `equals()`：判断两个instance是否逻辑相等；
+- `hashCode()`：计算一个instance的哈希值。
+
+```java
+class Person{
+	private String name;
+	
+	// 显示更有意义的字符串
+	@Override
+	public String toString() {
+		return "name="+name;
+	}
+	
+	// 比较是否相等
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof Person) {
+			Person p=(Person) o;
+			return this.name.equals(p.name);
+		}
+		return false;
+	}
+	
+	// 计算hash
+	@Override
+	public int hashCode() {
+		return this.name.hashCode();
+	}
+}
+```
+
+
+
+用`final`修饰的方法不能被`Override`。
+
+用`final`修饰的类不能被继承。
+
+用`final`修饰的字段在初始化后不能被修改。
+
+```java
+class Person {
+    protected String name;
+    public final String hello() {	//不允许子类Override的方法
+        return "Hello, " + name;
+    }
+}
+```
+
+```java
+final class Person {	//不允许子类Override的类
+    protected String name;
+}
+```
+
+```java
+class Person {
+    public final String name = "Unamed";	//成员变量name不允许修改
+}
+```
+
+
+
+
+
+
 
 
 
