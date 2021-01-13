@@ -1,3 +1,5 @@
+## Gitbash
+
 
 
 ```bash
@@ -11,14 +13,9 @@ git config --global user.email "[邮箱]"
 
 
 
-## Gitbash
-
-
-
 ```bash
 # 克隆远程仓库至本地
-# 如：git clone https://github.com/linwenhai/Notes.git
-git clone [克隆连接]
+git clone https://github.com/linwenhai/Notes.git
 
 # Github国内镜像
 git clone https://github.com.cnpmjs.org/linwenhai/Notes.git
@@ -32,7 +29,7 @@ git pull origin master
 
 # 提交修改至远程仓库
 git add .
-git commit -m "2020-08-29"
+git commit -m "2021-01-01"
 git push origin master
 ```
 
