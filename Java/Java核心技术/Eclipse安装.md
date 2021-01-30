@@ -8,7 +8,7 @@ JDK：1.8.0_131
 
 
 
-### 一、JDK环境变量
+#### 一、JDK环境变量
 
 Eclipse IDE JDK版本要求：
 
@@ -35,39 +35,39 @@ A Java 8 or newer JRE/JDK is required, LTS release are preferred to run all Ecli
 
 
 
-### 二、下载eclipse
+#### 二、下载eclipse
 
 下载URL：https://www.eclipse.org/downloads/packages/release/2020-06/r
 
 eclipse-java-2020-06-R-win32-x86_64.zip
 
-![img](D:\Notes\Java\Eclipse\image\20201201095353185.png)
+![img](image\20201201095353185.png)
 
 历史版本：
 
-![img](D:\Notes\Java\Eclipse\image\20201201095447722.png)
+![img](image\20201201095447722.png)
 
 
 
-### 三、Eclipse IDE 安装
+#### 三、Eclipse IDE 安装
 
 直接解压就可用。
 
-![img](https://img-blog.csdnimg.cn/20201201204829315.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpbndlbmhhaTIwMTg=,size_16,color_FFFFFF,t_70)![img](D:\Notes\Java\Eclipse\image\20201201204955997.png)
+![img](image/20201201204829315.png)![img](image\20201201204955997.png)
 
 1】设置项目路径：
 
-![img](D:\Notes\Java\Eclipse\image\20201201204829315.png)
+![img](image\20201201204829315.png)
 
 
 
 2】创建新项目
 
-![img](D:\Notes\Java\Eclipse\image\20201201205043473.png)
+![img](image\20201201205043473.png)
 
 
 
-### 四、Eclipse使用技巧
+#### 四、Eclipse使用技巧
 
 - 把光标放类名，按Ctrl键+点击鼠标左键看类源码。
 - 按Ctrl键+ /键：批量注释代码。
