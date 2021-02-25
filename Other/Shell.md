@@ -297,6 +297,18 @@ done
 
 
 
+```bash
+# for循环读取文件
+for line in $(cat filename)
+do
+ echo $line
+done
+```
+
+
+
+
+
 ##### 10.3 while 语句
 
 ```bash
@@ -506,4 +518,6 @@ read website
 echo "你输入的名字是 $website"  
 exit 0 #退出
 ```
+
+
 

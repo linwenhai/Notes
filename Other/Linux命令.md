@@ -18,6 +18,8 @@
 
 
 
+
+
 #### 2 xargs命令
 
 ```bash
@@ -27,6 +29,8 @@ ps -ef|grep java|grep -v grep|awk '{print $2}'|xargs kill -9
 # 删除当前目录下的log文件，空格是默认定界符，默认替换符号是{}
 ls *.log|xargs rm -rf {}
 ```
+
+
 
 
 
@@ -49,6 +53,8 @@ ps -C node
 
 >PID 		 TTY          TIME 		CMD
 >115437	pts/0       00:00:52  node
+
+
 
 
 
@@ -76,6 +82,8 @@ grep "e$" 1.log
 
 
 
+
+
 #### 5 curl命令
 
 ```bash
@@ -95,6 +103,8 @@ curl -u test:123456 -T 1.txt ftp://192.168.100.11/
 # 下载FTP服务器文件
 curl -u test:123456 ftp://192.168.100.11/logback.xml
 ```
+
+
 
 
 
@@ -121,6 +131,8 @@ crontab -e    # 编辑
 
 
 
+
+
 #### 7 file命令
 
 ```bash
@@ -138,12 +150,16 @@ find /tmp -type f -mtime +7    # 查找/tmp目录下7天前文件
 
 
 
+
+
 #### 8 awk命令
 
 ```bash
 awk -F ':' '{print $2}' 1.log    # 以冒号作为分隔符，打印第2域内容
 awk '{if ($12 > 1000) print $0}' access.log|more    # 使用if判断语句
 ```
+
+
 
 
 
@@ -155,11 +171,15 @@ grep "ERROR" 1.log|sort -nr    # 按数值倒序排列
 
 
 
+
+
 #### 10 uniq命令
 
 ```bash
 grep "eims" 1.log|uniq -c    # 去重
 ```
+
+
 
 
 
@@ -184,18 +204,22 @@ sed 's/$/duoduo/' abc.txt  >> test.txt
 
 
 
+
+
 #### 12 split命令
 
 ```bash
 split -l 100000 nc.csv -d nc_    # 切割csv文件，切割后文件名为nc_**
 rename nc* nc*.csv    # 批量重命名
 -----------------------------------------
-- -l : 按输出文件行数。
-- -b : 按输出文件大小
-- -d : 后缀为数字，默认为字母
-- -a : 默认为2，意思是后缀的位数
+-l : 按输出文件行数。
+-b : 按输出文件大小
+-d : 后缀为数字，默认为字母
+-a : 默认为2，意思是后缀的位数
 -----------------------------------------
 ```
+
+
 
 
 
@@ -208,6 +232,8 @@ tcpdump -i ens33 dst host 192.168.198.11 >/tmp/1.log
 # 截获主机hostname发送的所有数据
 tcpdump -i ens33 src host 192.168.198.11 >/tmp/1.log
 ```
+
+
 
 
 
